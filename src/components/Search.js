@@ -1,55 +1,67 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { AiOutlineSearch } from 'react-icons/ai';
+import { useDispatch, useSelector } from 'react-redux';
+import { changeKeyword } from '../store/reducers/keywordSlice';
 import List from './List';
 
 function Search() {
-  const [searchValue, setSearchValue] = useState('');
-  const [selected, setSelected] = useState(-1);
-  const keyUp = (e) => {
+  const dispatch = useDispatch();
+  const { keyword } = useSelector((store) => store.keyword);
+
+  const [value, setValue] = useState('');
+  const [timer, setTimer] = useState(0);
+
+  const listRef = useRef();
+  const inputRef = useRef();
+
+  const onKeyDownSearch = (e) => {
     if (e.key === 'ArrowDown') {
-      setSelected(selected + 1);
-    }
-    if (e.key === 'ArrowUp') {
-      setSelected(selected > 0 ? selected - 1 : selected);
+      listRef.current && listRef.current[0].focus();
     }
   };
 
+  const debounce = (e) => {
+    setValue(e.target.value);
+
+    if (timer) clearTimeout(timer);
+
+    const newTimer = setTimeout(() => {
+      dispatch(changeKeyword(e.target.value));
+    }, 800);
+    setTimer(newTimer);
+  };
+
   return (
-    <StyledSearch>
+    <>
       <StyledSearchContainer>
         <div className="input-wrap">
           <AiOutlineSearch size={20} />
           <input
             type="text"
             placeholder="질환명을 입력해 주세요."
-            list="languages"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            onKeyDown={keyUp}
+            value={value}
+            onChange={(e) => debounce(e)}
+            onKeyDown={onKeyDownSearch}
+            ref={inputRef}
           />
         </div>
         <button type="button">검색</button>
       </StyledSearchContainer>
-      {searchValue && <List selected={selected} setSelected={setSelected} />}
-    </StyledSearch>
+      {keyword && (
+        <List listRef={listRef} setValue={setValue} inputRef={inputRef} />
+      )}
+    </>
   );
 }
 
 export default Search;
 
-const StyledSearch = styled.div`
-  width: 100%;
-  max-width: 660px;
-  margin-top: 25px;
-`;
-
 const StyledSearchContainer = styled.div`
-  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
+  margin-top: 25px;
 
   .input-wrap {
     background-color: #fff;

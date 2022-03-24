@@ -11,7 +11,7 @@ function Title() {
   );
 }
 
-export default Title;
+export default React.memo(Title);
 
 const StyledTitle = styled.p`
   font-size: 2rem;

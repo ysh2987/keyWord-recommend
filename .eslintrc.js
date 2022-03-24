@@ -3,11 +3,7 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: [
-    'plugin:react/recommended',
-    'airbnb',
-    'plugin:prettier/recommended',
-  ],
+  extends: ['plugin:react/recommended', 'plugin:prettier/recommended'],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -36,5 +32,6 @@ module.exports = {
     'consistent-return': 'off',
     'jsx-a11y/img-redundant-alt': 'off',
     'react/no-array-index-key': 'off',
+    'no-param-reassign': 'off',
   },
 };

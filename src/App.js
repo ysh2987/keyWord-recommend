@@ -6,8 +6,10 @@ import Title from './components/Title';
 function App() {
   return (
     <StyledWrap>
-      <Title />
-      <Search />
+      <StyledContainer>
+        <Title />
+        <Search />
+      </StyledContainer>
     </StyledWrap>
   );
 }
@@ -18,8 +20,13 @@ const StyledWrap = styled.main`
   height: auto;
   min-height: 100vh;
   background-color: #cae9ff;
+  padding-top: 200px;
   display: flex;
-  justify-content: center;
   align-items: center;
   flex-direction: column;
+`;
+
+const StyledContainer = styled.div`
+  width: 100%;
+  max-width: 660px;
 `;
