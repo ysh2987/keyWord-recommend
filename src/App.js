@@ -1,21 +1,15 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
 import styled from 'styled-components';
 import Search from './components/Search';
 import Title from './components/Title';
-import fetchSearchKeword from './store/reducers/searchThunk';
 
 function App() {
-  const { data, error, isLoading } = useSelector((store) => store.searchSlice);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchSearchKeword('종양'));
-  }, []);
-  console.log(data, error, isLoading);
   return (
     <StyledWrap>
-      <Title />
-      <Search />
+      <StyledContainer>
+        <Title />
+        <Search />
+      </StyledContainer>
     </StyledWrap>
   );
 }
@@ -26,8 +20,13 @@ const StyledWrap = styled.main`
   height: auto;
   min-height: 100vh;
   background-color: #cae9ff;
+  padding-top: 200px;
   display: flex;
-  justify-content: center;
   align-items: center;
   flex-direction: column;
+`;
+
+const StyledContainer = styled.div`
+  width: 100%;
+  max-width: 660px;
 `;
