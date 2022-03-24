@@ -1,36 +1,19 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import {
-  persistReducer,
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-} from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
-import searchSlice from './reducers/searchSlice';
+import { setupListeners } from '@reduxjs/toolkit/query';
+import keywordSlice from './reducers/keywordSlice';
+import { api } from '../service/api';
 
-const persistConfig = {
-  key: 'root',
-  storage,
-  whitelist: ['searchSlice'],
-};
-
-const rootReducer = combineReducers({
-  searchSlice,
+const reducers = combineReducers({
+  keyword: keywordSlice,
+  [api.reducerPath]: api.reducer,
 });
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
-
 const store = configureStore({
-  reducer: persistedReducer,
+  reducer: reducers,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
-    }),
+    getDefaultMiddleware().concat(api.middleware),
 });
 
 export default store;
+
+setupListeners(store.dispatch);
