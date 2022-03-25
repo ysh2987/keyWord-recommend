@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
-import { useGetPostsQuery } from '../service/api';
+import { useGetKeywordQuery } from '../service/api';
 import { changeKeyword } from '../store/reducers/keywordSlice';
 
-function List({ listRef, inputRef, setValue }) {
+function SearchList({ listRef, inputRef, setValue }) {
   const dispatch = useDispatch();
   const { keyword } = useSelector((store) => store.keyword);
-  const { data, isError, isLoading } = useGetPostsQuery(keyword);
+  const { data, isError, isLoading, isFetching } = useGetKeywordQuery(keyword);
 
   const onChageKeyword = (word) => {
     setValue(word);
@@ -18,7 +18,6 @@ function List({ listRef, inputRef, setValue }) {
 
   const onChangeTab = (e, index, name) => {
     const first = listRef.current[0];
-    const last = listRef.current[listRef.current.length - 1];
     const next = listRef.current[index + 1];
     const prev = listRef.current[index - 1];
 
@@ -28,8 +27,9 @@ function List({ listRef, inputRef, setValue }) {
     }
 
     if (e.key === 'ArrowUp') {
+      e.preventDefault();
       if (prev) prev.focus();
-      else last ? last.focus() : listRef.current[data.length - 1].focus();
+      else inputRef.current.focus();
     }
 
     if (e.key === 'Enter') {
@@ -39,33 +39,23 @@ function List({ listRef, inputRef, setValue }) {
   };
 
   useEffect(() => {
-    listRef.current = [];
-  }, [keyword]);
+    if (!data) listRef.current = [];
+  }, [data]);
 
-  if (isLoading) {
-    return (
-      <StyledList>
-        <p className="suggest">해당 검색어로 검색중입니다.</p>
-      </StyledList>
-    );
-  }
+  if (isLoading || isFetching)
+    return <p className="suggest">해당 검색어로 검색중입니다.</p>;
+
   if (isError) {
-    return (
-      <StyledList>
-        <p className="suggest">잠시후 다시 시도해주세요</p>
-      </StyledList>
-    );
+    return <p className="suggest">잠시후 다시 시도해주세요</p>;
   }
+
   if (!data?.length) {
-    return (
-      <StyledList>
-        <p className="suggest">검색 내용이 없습니다.</p>
-      </StyledList>
-    );
+    return <p className="suggest">검색 내용이 없습니다.</p>;
   }
+
   return (
-    <StyledList>
-      <p className="suggest">추천 검색어</p>
+    <>
+      <p className="suggest">추천검색어</p>
       <ul>
         {data.slice(0, 7).map((list, index) => {
           return (
@@ -86,50 +76,50 @@ function List({ listRef, inputRef, setValue }) {
           );
         })}
       </ul>
-    </StyledList>
+    </>
   );
 }
-List.propTypes = {
+SearchList.propTypes = {
   setValue: PropTypes.func.isRequired,
   listRef: PropTypes.any.isRequired,
   inputRef: PropTypes.any.isRequired,
 };
 
-export default List;
+export default SearchList;
 
-const StyledList = styled.div`
-  background-color: #fff;
-  border-radius: 10px;
-  margin-top: 20px;
-  padding: 15px 0;
-  ul:focus {
-    color: red;
-  }
-  .suggest {
-    color: #c2c2c2;
-    padding: 0 24px;
-    font-weight: bold;
-  }
+// const StyledList = styled.div`
+//   background-color: #fff;
+//   border-radius: 10px;
+//   margin-top: 20px;
+//   padding: 15px 0;
+//   ul:focus {
+//     color: red;
+//   }
+//   .suggest {
+//     color: #c2c2c2;
+//     padding: 0 24px;
+//     font-weight: bold;
+//   }
 
-  .loading {
-    padding: 0 24px;
-  }
+//   .loading {
+//     padding: 0 24px;
+//   }
 
-  li {
-    display: flex;
-    align-items: center;
-    line-height: 40px;
-    cursor: pointer;
-    padding: 0 24px;
-    svg {
-      margin-right: 10px;
-    }
-    &:hover {
-      background-color: #c0c0c0;
-    }
-    &:focus {
-      outline: none;
-      background-color: #c0c0c0;
-    }
-  }
-`;
+//   li {
+//     display: flex;
+//     align-items: center;
+//     line-height: 40px;
+//     cursor: pointer;
+//     padding: 0 24px;
+//     svg {
+//       margin-right: 10px;
+//     }
+//     &:hover {
+//       background-color: #c0c0c0;
+//     }
+//     &:focus {
+//       outline: none;
+//       background-color: #c0c0c0;
+//     }
+//   }
+// `;

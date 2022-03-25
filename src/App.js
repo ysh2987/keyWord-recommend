@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Search from './components/Search';
+import SearchBar from './components/SearchBar';
 import Title from './components/Title';
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
     <StyledWrap>
       <StyledContainer>
         <Title />
-        <Search />
+        <SearchBar />
       </StyledContainer>
     </StyledWrap>
   );

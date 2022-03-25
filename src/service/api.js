@@ -3,15 +3,15 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://api.clinicaltrialskorea.com/api/v1/search-conditions/',
+    baseUrl:
+      'https://api.clinicaltrialskorea.com/api/v1/search-conditions/?name=',
   }),
-  keepUnusedDataFor: 30,
+  keepUnusedDataFor: 15,
   endpoints: (builder) => ({
-    getPosts: builder.query({
-      query: (keword) => `?name=${keword}`,
-      keepUnusedDataFor: 5,
+    getKeyword: builder.query({
+      query: (keyword) => `${keyword}`,
     }),
   }),
 });
 
-export const { useGetPostsQuery } = api;
+export const { useGetKeywordQuery } = api;
