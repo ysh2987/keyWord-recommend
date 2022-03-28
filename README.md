@@ -99,7 +99,7 @@ export const api = createApi({
 ## 어려웠던 점
 - RTK-Query를 프로젝트에 적용하는 것은 어렵지 않았지만, isLoading 상태에서 원하지 않는 버그를 발견했습니다.
 - 처음 데이터를 불러올때는 isLoading이 정상적으로 동작하지만 그 이후로는 isLoading이 항상 false여서 검색 중인 화면을 사용자에게 보여주지 못했습니다.
-- isLoadin에 조건에 대해 찾아본 결과 첫 api를 요청만 true를 반환하기 때문에 첫 요청에서만 loading 처리가 가능했습니다. 
+- isLoading에 조건에 대해 찾아본 결과 첫 api를 요청만 true를 반환하기 때문에 첫 요청에서만 loading 처리가 가능했습니다. 
 - isFetching은 캐시된 데이터가 없는 요청일 경우 true를 반환해 원하는 처리를 할 수 있었습니다.
 - isFetching || isLoading 상태일 때 로딩 컴포넌트를 보여주어 처리하였습니다.
 ```
