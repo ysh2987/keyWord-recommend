@@ -14,7 +14,9 @@
 ```
 ① 해당 레포지토리를 클론한다.
 ② 프로젝트의 패키지를 설치한다. (npm install)
-③ scripts 명령어로 프로젝트를 실행한다. (npm start)
+③ // .env에 api url 추가
+REACT_APP_API_URL=https ~ /?name=까지 입력
+④ scripts 명령어로 프로젝트를 실행한다. (npm start)
 ```
 
 ## 기술 스택
@@ -37,14 +39,14 @@
 - 함수형 컴포넌트 사용 필수
 ```
 
-### 유송현
+## 유송현
 
 ## 구현 방법
 
 - API 호출 최적화
 
   - input 검색어에 의존해 api 요청을 하기 때문에 디바운스를 사용해 사용자에 입력이 전부 끝난 뒤 요청을 보내도록 처리하였습니다.
-  - Redux Toolkit Query 라이브러리를 사용해 성공, 실패, 로딩처리와 1분에 expire time을 설정하였습니다.
+  - Redux Toolkit Query 라이브러리를 사용해 성공, 실패, 로딩처리와 15초에 expire time을 설정하였습니다.
   - API 호출 최적화를 구현하기 위해 localstorage / react query / redux toolkit 세가지 방식중에 고민을 하였습니다.
   - localstorage를 사용해 date Time과 해당 키워드를 local 저장해 api 요청을 하기전 local에 데이터가 있거나 date time이 만료되었을 때만 요청을 하는 방식도 있었지만 redux를 사용하고 있고 간편한 라이브러리들이 많이 있었기 때문에 선택하지 않았습니다.
   - react query로 Server state나 api 중복 호출을 간편하게 처리할 수 있었지만, react query랑 redux를 같이 사용하기엔 둘다 번들링 하는 과정에서 많은 리소스를 차지하기 때문에 전역 상태 관리 라이브러리를 recoil / MobX 비교적 redux 보다 가벼운 상태관리 라이브러리를 사용해야 한다고 판단해 선택하지 않았습니다.
@@ -54,12 +56,12 @@
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://api.clinicaltrialskorea.com/api/v1/search-conditions/',
+    baseUrl: process.env.REACT_APP_API_URL,
   }),
   keepUnusedDataFor: 15,
   endpoints: (builder) => ({
     getKeyword: builder.query({
-      query: (keword) => `?name=${keword}`,
+      query: (keyword) => `${keyword}`,
     }),
   }),
 });
@@ -67,30 +69,40 @@ export const api = createApi({
 
 - 추천 검색어 키보드로 제어
   - useRef hook을 사용해 input이 활성화 된 상태에서 arrowDown 입력할 시 추천 list에 첫번째 요소에 focus 한뒤 list 요소에 이벤트를 등록해 해당하는 요소에 index를 이동해 구현하였습니다.
-  - Enter를 입력 하거나 요소를 클릭할 시 다시 input에 focus를 주었으며 input에서 Enter를 입력하면 해당 검색어로 이동하게 처리하였습니다.
+  - Enter를 입력 하거나 요소를 클릭할 시 다시 input에 focus를 주었으며, input에서 Enter를 입력하면 해당 검색어로 이동하게 처리하였습니다.
 
 ```javascript
-const onChangeTab = (e, index, name) => {
-  const first = listRef.current[0];
-  const last = listRef.current[listRef.current.length - 1];
-  const next = listRef.current[index + 1];
-  const prev = listRef.current[index - 1];
+ const onChangeTab = (e, index, name) => {
+    const first = listRef.current[0];
+    const next = listRef.current[index + 1];
+    const prev = listRef.current[index - 1];
 
-  if (e.key === 'ArrowDown') {
-    if (next) next.focus();
-    else first.focus();
-  }
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (next) next.focus();
+      else first.focus();
+    }
 
-  if (e.key === 'ArrowUp') {
-    if (prev) prev.focus();
-    else last ? last.focus() : listRef.current[data.length - 1].focus();
-  }
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (prev) prev.focus();
+      else inputRef.current.focus();
+    }
 
-  if (e.key === 'Enter') {
-    onChageKeyword(name);
-    inputRef.current.focus();
-  }
-};
+    if (e.key === 'Enter') {
+      onChageKeyword(name);
+      inputRef.current.focus();
+    }
+  };
 ```
 
 ## 어려웠던 점
+- RTK-Query를 프로젝트에 적용하는 것은 어렵지 않았지만, isLoading 상태에서 원하지 않는 버그를 발견했습니다.
+- 처음 데이터를 불러올때는 isLoading이 정상적으로 동작하지만 그 이후로는 isLoading이 항상 false여서 검색 중인 화면을 사용자에게 보여주지 못했습니다.
+- isLoadin에 조건에 대해 찾아본 결과 첫 api를 요청만 true를 반환하기 때문에 첫 요청에서만 loading 처리가 가능했습니다. 
+- isFetching은 캐시된 데이터가 없는 요청일 경우 true를 반환해 원하는 처리를 할 수 있었습니다.
+- isFetching || isLoading 상태일 때 로딩 컴포넌트를 보여주어 처리하였습니다.
+```
+if (isLoading || isFetching)
+    return <p className="suggest">해당 검색어로 검색중입니다.</p>;
+```
