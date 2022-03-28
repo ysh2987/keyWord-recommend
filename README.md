@@ -7,7 +7,7 @@
 
 ## 배포링크
 
-[🚀 배포 링크](https://logpreesso-9.netlify.app/)
+[🚀 배포 링크](https://humanscape-ysh.netlify.app/)
 
 ## 실행 방법
 
