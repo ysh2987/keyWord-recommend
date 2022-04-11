@@ -3,7 +3,7 @@
 - 검색어 추천 기능 구현하기
 - 기간: 22.03.21~22.03.25
 
-![React App - Chrome 2022-04-12 00-50-49](https://user-images.githubusercontent.com/81687138/162780853-f421541b-f786-4dbc-bd56-182f31565a34.gif)
+![test](https://user-images.githubusercontent.com/81687138/162781278-d898db82-a605-442d-96d7-83a683b499e3.gif)
 
 
 ## 배포링크
