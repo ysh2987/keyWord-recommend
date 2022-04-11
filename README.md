@@ -3,7 +3,8 @@
 - 검색어 추천 기능 구현하기
 - 기간: 22.03.21~22.03.25
 
-![test](https://user-images.githubusercontent.com/81687138/162781278-d898db82-a605-442d-96d7-83a683b499e3.gif)
+https://user-images.githubusercontent.com/81687138/162781424-65222bde-47b2-4a30-8a34-42958ea7de99.mp4
+
 
 
 ## 배포링크
