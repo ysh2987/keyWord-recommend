@@ -1,9 +1,10 @@
-# 휴먼 스케이프
-
 ## 프로젝트 소개
 
 - 검색어 추천 기능 구현하기
 - 기간: 22.03.21~22.03.25
+
+https://user-images.githubusercontent.com/81687138/162780590-6cf6e4b8-59ec-4eaa-ba92-1b7ab2b5a991.mp4
+
 
 ## 배포링크
 
@@ -18,6 +19,10 @@
 REACT_APP_API_URL=https ~ /?name=까지 입력
 ④ scripts 명령어로 프로젝트를 실행한다. (npm start)
 ```
+
+
+
+
 
 ## 기술 스택
 
@@ -38,6 +43,8 @@ REACT_APP_API_URL=https ~ /?name=까지 입력
 - 배포하여 웹에서 바로 사용 할 수 있도록 제공 (README.md 에 url 명시)
 - 함수형 컴포넌트 사용 필수
 ```
+
+
 
 ## 유송현
 
