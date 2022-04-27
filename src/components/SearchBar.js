@@ -15,15 +15,10 @@ function SearchBar() {
   const listRef = useRef();
   const inputRef = useRef();
 
-  const onSearchMove = () => {
-    window.location.href = `https://clinicaltrialskorea.com/studies?condition=${value}`;
-  };
-
   const onKeyDownSearch = (e) => {
     if (e.key === 'ArrowDown') {
       listRef.current && listRef.current[0].focus();
     }
-    if (e.key === 'Enter') onSearchMove();
   };
 
   const debounce = (e) => {
@@ -50,9 +45,7 @@ function SearchBar() {
             ref={inputRef}
           />
         </div>
-        <button type="button" onClick={onSearchMove}>
-          검색
-        </button>
+        <button type="button">검색</button>
       </StyledSearchContainer>
       {keyword && (
         <StyledList>
